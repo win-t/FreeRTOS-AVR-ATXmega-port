@@ -336,8 +336,7 @@ void vPortYieldFromTick( void )
 	 * the context is saved at the start of vPortYieldFromTick().  The tick
 	 * count is incremented after the context is saved.
 	 */
-	void TCC0_OVF_vect( void ) __attribute__ ( ( signal, naked ) );
-	void TCC0_OVF_vect( void )
+	ISR(TCC0_OVF_vect, ISR_NAKED)
 	{
 		/*
 		 * Context switch function used by the tick.  This must be identical to
@@ -355,8 +354,7 @@ void vPortYieldFromTick( void )
 	 * tick count.  We don't need to switch context, this can only be done by
 	 * manual calls to taskYIELD();
 	 */
-	void TCC0_OVF_vect( void ) __attribute__ ( ( signal ) );
-	void TCC0_OVF_vect( void )
+	ISR(TCC0_OVF_vect, ISR_NAKED)
 	{
 		xTaskIncrementTick();
 	}
