@@ -1,7 +1,7 @@
-FreeRTOS port on ATXmega256A3BU (maybe can be used with another XMega series)
+FreeRTOS port on AVR XMega (Tested on ATXmega256A3BU)
 
 Note:
-Using TCC0 as Timer for controlling context switching, so dont use TCC0
-
-Assuming RAMPD, RAMPX, RAMPY, RAMPZ, and EIND are not part of execution-context,
-beware if you using >128KB flash memory
+- Using TCC0 as Timer for controlling context switching,
+  so dont use TCC0 in your application code
+- Assuming RAMPD, RAMPX, RAMPY, RAMPZ, and EIND are not part of execution-context,
+  beware if you using >128KB flash memory
