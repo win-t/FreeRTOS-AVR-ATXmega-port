@@ -309,26 +309,6 @@ void vPortYield( void )
 }
 /*-----------------------------------------------------------*/
 
-/*
- * Context switch function used by the tick.  This must be identical to
- * vPortYield() from the call to vTaskSwitchContext() onwards.  The only
- * difference from vPortYield() is the tick count is incremented as the
- * call comes from the tick ISR.
- */
-void vPortYieldFromTick( void ) __attribute__ ( ( naked ) );
-void vPortYieldFromTick( void )
-{
-    portSAVE_CONTEXT();
-    if( xTaskIncrementTick() != pdFALSE )
-    {
-        vTaskSwitchContext();
-    }
-    portRESTORE_CONTEXT();
-
-    asm volatile ( "ret" );
-}
-/*-----------------------------------------------------------*/
-
 #if configUSE_PREEMPTION == 1
 
     /*
@@ -344,7 +324,13 @@ void vPortYieldFromTick( void )
          * difference from vPortYield() is the tick count is incremented as the
          * call comes from the tick ISR.
          */
-        vPortYieldFromTick();
+        portSAVE_CONTEXT();
+        if( xTaskIncrementTick() != pdFALSE )
+        {
+            vTaskSwitchContext();
+        }
+        portRESTORE_CONTEXT();
+
         asm volatile ( "reti" );
     }
 #else
@@ -368,13 +354,8 @@ void vPortYieldFromTick( void )
  */
 static void prvSetupTimerInterrupt(void)
 {
-    uint8_t tmpFlag;
-
-    //save status register, and disable global interrupt
-    {
-        tmpFlag = SREG;
-        cli();
-    }
+    // disable global interrupt for a moment
+    cli();
 
     {
         //enable TC0 clock source, high resolution
@@ -394,11 +375,7 @@ static void prvSetupTimerInterrupt(void)
 
     }
 
-    //restore status register, and enable global interrupt
-    {
-        asm volatile("" ::: "memory"); // barrier
-        SREG = tmpFlag;
-        sei();
-    }
+    // enable global interrupt
+    sei();
 
 }
