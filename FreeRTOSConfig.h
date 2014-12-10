@@ -23,6 +23,7 @@
 
 /* Co-routine related definitions. */
 #define configUSE_CO_ROUTINES                           0
+#define configMAX_CO_ROUTINE_PRIORITIES                 5
 
 /* Optional functions - most linkers will remove unused functions anyway. */
 #define INCLUDE_vTaskPrioritySet                        0
