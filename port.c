@@ -362,7 +362,7 @@ static void prvSetupTimerInterrupt(void)
         PR.PRPC &= ~(PR_TC0_bm | PR_HIRES_bm);
 
         //set period of counter
-        TCC0.PER = configCPU_CLOCK_HZ / configTICK_RATE_HZ / 1;
+        TCC0.PER = (configCPU_CLOCK_HZ / configTICK_RATE_HZ / 1) - 1;
 
         //enable interrupt and set low level
         TCC0.INTCTRLA = TC_OVFINTLVL_LO_gc;
